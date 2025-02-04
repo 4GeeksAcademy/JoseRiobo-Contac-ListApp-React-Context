@@ -1,0 +1,17 @@
+.anotherContact{
+    border: solid 2px;
+    border-radius: 5px;
+    padding: 10px;
+}
+.contactImage{
+    width: 150px;
+    height: 150px;
+    
+
+}
+.customImage{
+    border-radius: 100%;
+    width: 150px;
+    height: 150px;
+    border: solid 5px;
+}
