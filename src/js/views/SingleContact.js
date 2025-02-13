@@ -1,59 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const SingleContact = () => {
-    const [listOfContacts, setListOfContacts] = useState([]);
+   const{actions} = useContext(Context);
     const [inputValues, setInputValues] = useState({
         name: "",
         phone: "",
         email: "",
         address: ""
     });
+
     const{id} = useParams();
 
-    const myApi = "https://playground.4geeks.com/contact/agendas/joseriobo";
-    const myContactApi = "https://playground.4geeks.com/contact/agendas/joseriobo/contacts/";
-
-                
-
-    useEffect(() => {
-        updateMyAgenda();
-    }, []);
-
-
-    
-    const updateMyAgenda = async () => {
-        try {
-            const response = await fetch(myApi);
-            if (!response.ok) {
-                await addMyAgenda();
-            } else {
-                const data = await response.json();
-                console.log("Fetched contacts:", data.contacts);
-                setListOfContacts(data.contacts || []);
-            }
-        } catch (error) {
-            console.error("Error updating agenda:", error);
-        }
-    };
 
     const editContact = async () => {
       
         try {
-            const response = await fetch(`${myContactApi}${id}`, {
+            const response = await fetch(`https://playground.4geeks.com/contact/agendas/joseriobo/contacts/${id}`, {
                 method: "PUT",
                 body: JSON.stringify(inputValues),
                 headers: { "Content-Type": "application/json" },
             });
-
-            if (response.ok) {
-                console.log("Contact edited successfully");
-                updateMyAgenda(); 
-                
-            } else {
-                console.error("Failed to edit contact");
-            }
+            actions.fetchContacts();
         } catch (error) {
             console.error("Error editing contact:", error);
         }

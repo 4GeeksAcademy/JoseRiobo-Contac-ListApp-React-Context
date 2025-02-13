@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/NewContact.css";
-
+import { Context } from "../store/appContext";
+import { useContext } from "react";
 
 
 export const NewContact = () => {
-    const [listOfContacts, setListOfContacts] = useState([]);
+
+    const { store, actions } = useContext(Context);
+
+   
     const [inputValues, setInputValues] = useState({
         name: "",
         phone: "",
@@ -14,58 +18,19 @@ export const NewContact = () => {
     });
 
     const myApi = "https://playground.4geeks.com/contact/agendas/joseriobo";
-    const myContactApi = "https://playground.4geeks.com/contact/agendas/joseriobo/contacts/";
-
-    
-    useEffect(() => {
-        updateMyAgenda();
-    }, []);
-
+    const myContactApi = "https://playground.4geeks.com/contact/agendas/joseriobo/contacts/";    
   
-    const addMyAgenda = async () => {
-        try {
-            const response = await fetch(myApi, { method: "POST" });
-            if (response.ok) {
-                console.log("Agenda created successfully");
-            }
-        } catch (error) {
-            console.error("Error creating agenda:", error);
-        }
-    };
 
-    
-    const updateMyAgenda = async () => {
-        try {
-            const response = await fetch(myApi);
-            if (!response.ok) {
-                await addMyAgenda();
-            } else {
-                const data = await response.json();
-                console.log("Fetched contacts:", data.contacts);
-                setListOfContacts(data.contacts || []);
-            }
-        } catch (error) {
-            console.error("Error updating agenda:", error);
-        }
-    };
-
-    const addNewContact = async (event) => {
-        event.preventDefault();
+    const addNewContact = async () => {
 
         try {
-            const response = await fetch(myContactApi, {
+            const response = await fetch('https://playground.4geeks.com/contact/agendas/joseriobo/contacts', {
                 method: "POST",
                 body: JSON.stringify(inputValues),
                 headers: { "Content-Type": "application/json" }
             });
 
-            if (response.ok) {
-                console.log("Contact added successfully");
-                updateMyAgenda(); 
-                setInputValues({ name: "", phone: "", email: "", address: "" }); 
-            } else {
-                console.error("Failed to add contact");
-            }
+            actions.fetchContacts();
         } catch (error) {
             console.error("Error adding contact:", error);
         }

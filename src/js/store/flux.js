@@ -1,18 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			NewContact: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			ListOfContacts:[],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -35,9 +24,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return elm;
 				});
 
-				//reset the global store
+			
 				setStore({ NewContact: NewContact });
-			}
+			}, 
+		
+			
+			fetchContacts: async() =>{
+				const response = await fetch("https://playground.4geeks.com/contact/agendas/joseriobo/contacts/")
+				if (!response.ok){getActions().addMyAgenda()}
+				const data = await response.json();
+				setStore({ListOfContacts: data.contacts})
+				console.log(data.contacts);	
+			},
+				addMyAgenda: async() => {
+				const response = await fetch( "https://playground.4geeks.com/contact/agendas/joseriobo", { method: "POST" })
+				
+			},
+				
+
 		}
 	};
 };
